@@ -1,219 +1,633 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dashboard Makanan Melayu Malaysia</title>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Unit Latihan Staff — Politeknik Mukah</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:#f0f2f5;color:#1f2328;font-size:14px;line-height:1.6}
-header{background:linear-gradient(135deg,#c0392b,#7b2d1f);color:#fff;padding:24px 32px;display:flex;align-items:center;gap:16px}
-header .flag{font-size:2.4rem}
-header h1{font-size:1.55rem;font-weight:700}
-header p{font-size:.85rem;opacity:.85;margin-top:2px}
-.kpi-row{display:flex;gap:16px;padding:24px 32px 0;flex-wrap:wrap}
-.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 22px;flex:1;min-width:150px;text-align:center}
-.kpi .num{font-size:2rem;font-weight:700;color:#c0392b}
-.kpi .lbl{font-size:.78rem;color:#57606a;margin-top:2px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:20px 32px 32px}
-@media(max-width:820px){.grid{grid-template-columns:1fr;padding:16px}.kpi-row{padding:16px 16px 0}header{padding:18px 16px}}
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;overflow:hidden}
-.card.full{grid-column:1/-1}
-.card h2{font-size:.92rem;font-weight:600;color:#1f2328;margin-bottom:2px}
-.card p.sub{font-size:.75rem;color:#57606a;margin-bottom:12px}
-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px}
-thead th{background:#f7f8fa;color:#57606a;font-weight:600;padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb}
-tbody tr:nth-child(even){background:#fafafa}
-tbody tr:hover{background:#f0f2f5}
-tbody td{padding:8px 12px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
-.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:600}
-.badge-nasi{background:#fde8e8;color:#c0392b}
-.badge-mee{background:#fef3e2;color:#d4780a}
-.badge-lauk{background:#e8f5e9;color:#1e7e34}
-.badge-roti{background:#f3e8fd;color:#7c3aed}
-.bar-wrap{background:#f0f2f5;border-radius:4px;height:8px;width:100%}
-.bar-fill{height:8px;border-radius:4px;background:#c0392b}
-footer{text-align:center;padding:20px;font-size:.72rem;color:#57606a;border-top:1px solid #e5e7eb;background:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:13px;line-height:1.6;color:#1f2328;background:#f0f2f5;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:215px;height:100vh;background:#1e3a5f;color:#fff;display:flex;flex-direction:column;z-index:100;}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.sidebar-logo .poly{font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.06em;text-transform:uppercase;}
+.sidebar-logo .title{font-size:14px;font-weight:700;line-height:1.3;margin-top:3px;}
+.sidebar-logo .sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.sidebar-nav{flex:1;padding:10px 0;overflow-y:auto;}
+.nav-section{font-size:10px;font-weight:700;letter-spacing:0.08em;color:rgba(255,255,255,0.35);text-transform:uppercase;padding:10px 16px 4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;color:rgba(255,255,255,0.72);font-size:12px;border-left:3px solid transparent;transition:all 0.15s;}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.nav-item.active{background:rgba(59,130,212,0.3);color:#fff;font-weight:600;border-left-color:#3b82d4;}
+.nav-item .icon{font-size:15px;width:18px;text-align:center;}
+.sidebar-user{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.1);}
+.sidebar-user .uname{font-size:12px;font-weight:600;color:#fff;}
+.sidebar-user .urole{font-size:11px;color:rgba(255,255,255,0.45);}
+
+/* MAIN */
+.main{margin-left:215px;min-height:100vh;}
+.topbar{background:#fff;border-bottom:1px solid #e5e7eb;padding:11px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar-title{font-size:15px;font-weight:700;color:#1f2328;}
+.topbar-right{display:flex;align-items:center;gap:14px;font-size:12px;}
+.badge-notif{background:#ef4444;color:#fff;font-size:10px;font-weight:700;border-radius:10px;padding:1px 6px;margin-left:2px;}
+.topbar-date{color:#57606a;}
+.content{padding:20px 24px 40px;}
+
+/* TABS */
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.tab{padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:#57606a;border:1px solid #e5e7eb;background:#fff;transition:all 0.15s;}
+.tab:hover{background:#f7f8fa;}
+.tab.active{background:#1e3a5f;color:#fff;border-color:#1e3a5f;}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;margin-bottom:20px;}
+.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;}
+.kpi-label{font-size:11px;color:#57606a;margin-bottom:3px;}
+.kpi-val{font-size:22px;font-weight:700;color:#1e3a5f;}
+.kpi-sub{font-size:11px;color:#57606a;margin-top:1px;}
+.kpi-up{color:#16a34a;}
+.kpi-dn{color:#dc2626;}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+
+/* CARD */
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:20px;}
+.card:last-child{margin-bottom:0;}
+.card-title{font-size:11px;font-weight:700;color:#57606a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;padding:7px 10px;font-weight:600;color:#57606a;border-bottom:2px solid #e5e7eb;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;white-space:nowrap;}
+td{padding:8px 10px;border-bottom:1px solid #f0f2f5;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#f7f8fa;}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;}
+.b-green{background:#dcfce7;color:#15803d;}
+.b-yellow{background:#fef9c3;color:#92400e;}
+.b-red{background:#fee2e2;color:#b91c1c;}
+.b-blue{background:#dbeafe;color:#1d4ed8;}
+.b-gray{background:#f1f5f9;color:#475569;}
+.b-purple{background:#f3e8ff;color:#7e22ce;}
+
+/* PROGRESS */
+.prog-wrap{background:#e5e7eb;border-radius:4px;height:7px;overflow:hidden;min-width:70px;}
+.prog-bar{height:7px;border-radius:4px;}
+.pb{background:#3b82d4;}
+.pg{background:#16a34a;}
+.po{background:#f59e0b;}
+.pr{background:#ef4444;}
+
+/* ACTIVITY */
+.activity-list{list-style:none;}
+.activity-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #f0f2f5;}
+.activity-item:last-child{border-bottom:none;}
+.adot{width:8px;height:8px;min-width:8px;border-radius:50%;margin-top:5px;}
+.atext{font-size:12px;color:#1f2328;}
+.atime{font-size:11px;color:#57606a;}
+
+/* SVG */
+svg.chart{width:100%;overflow:visible;}
+
+/* FOOTER */
+.footer{margin-top:24px;border-top:1px solid #e5e7eb;padding:10px 24px;text-align:center;font-size:11px;color:#57606a;}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="flag">&#127474;&#127486;</div>
-  <div>
-    <h1>Dashboard Makanan Melayu Malaysia</h1>
-    <p>Analisis populariti, nutrisi &amp; kepelbagaian hidangan tradisional &mdash; Data 2024</p>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="poly">Politeknik Mukah</div>
+    <div class="title">Unit Latihan Staff</div>
+    <div class="sub">Sistem Pengurusan Latihan</div>
   </div>
-</header>
-
-<div class="kpi-row">
-  <div class="kpi"><div class="num">10</div><div class="lbl">Hidangan Terpilih</div></div>
-  <div class="kpi"><div class="num">6</div><div class="lbl">Kategori Utama</div></div>
-  <div class="kpi"><div class="num">95%</div><div class="lbl">Populariti Tertinggi &mdash; Nasi Lemak</div></div>
-  <div class="kpi"><div class="num">644</div><div class="lbl">Kalori Tertinggi kcal &mdash; Nasi Lemak</div></div>
-  <div class="kpi"><div class="num">35g</div><div class="lbl">Protein Tertinggi &mdash; Rendang</div></div>
-</div>
-
-<div class="grid">
-
-  <div class="card full">
-    <h2>&#127859; 10 Makanan Melayu Paling Popular di Malaysia</h2>
-    <p class="sub">Berdasarkan tinjauan &amp; carian dalam talian 2024 (Indeks 0&ndash;100)</p>
-    <div id="c1" style="height:340px;width:100%"></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Utama</div>
+    <div class="nav-item active" onclick="go('overview',this)"><span class="icon">🏠</span> Papan Pemuka</div>
+    <div class="nav-item" onclick="go('rekod',this)"><span class="icon">📋</span> Rekod Latihan</div>
+    <div class="nav-item" onclick="go('permohonan',this)"><span class="icon">📝</span> Permohonan</div>
+    <div class="nav-item" onclick="go('katalog',this)"><span class="icon">📚</span> Katalog Kursus</div>
+    <div class="nav-section">Kewangan</div>
+    <div class="nav-item" onclick="go('bajet',this)"><span class="icon">💰</span> Bajet &amp; Tuntutan</div>
+    <div class="nav-section">Laporan</div>
+    <div class="nav-item" onclick="go('laporan',this)"><span class="icon">📊</span> Analitik &amp; Laporan</div>
+    <div class="nav-item" onclick="go('penilaian',this)"><span class="icon">⭐</span> Penilaian Latihan</div>
+    <div class="nav-section">Pentadbiran</div>
+    <div class="nav-item" onclick="go('staf',this)"><span class="icon">👥</span> Senarai Staf</div>
+  </nav>
+  <div class="sidebar-user">
+    <div class="uname">Pn. Siti Rahimah bt Awang</div>
+    <div class="urole">Pegawai Unit Latihan</div>
   </div>
+</aside>
 
-  <div class="card">
-    <h2>&#127374; Agihan Kategori Makanan Melayu</h2>
-    <p class="sub">Mengikut jenis hidangan</p>
-    <div id="c2" style="height:320px;width:100%"></div>
-  </div>
-
-  <div class="card">
-    <h2>&#128293; Kalori &amp; Protein per Hidangan</h2>
-    <p class="sub">Per hidangan (anggaran purata)</p>
-    <div id="c3" style="height:320px;width:100%"></div>
-  </div>
-
-  <div class="card">
-    <h2>&#11088; Perbandingan Ciri 3 Hidangan Terbaik</h2>
-    <p class="sub">Nasi Lemak vs Rendang vs Laksa</p>
-    <div id="c4" style="height:340px;width:100%"></div>
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Papan Pemuka Utama</div>
+    <div class="topbar-right">
+      <span>🔔<span class="badge-notif">5</span></span>
+      <span class="topbar-date">Rabu, 4 November 2026</span>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>&#128506; Kepopularan Hidangan Mengikut Negeri</h2>
-    <p class="sub">Skor populariti (0&ndash;100) berdasarkan asal-usul hidangan</p>
-    <div id="c5" style="height:340px;width:100%"></div>
-  </div>
+  <div class="content">
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active"  onclick="go('overview',this)">🏠 Utama</div>
+      <div class="tab" onclick="go('rekod',this)">📋 Rekod</div>
+      <div class="tab" onclick="go('permohonan',this)">📝 Permohonan</div>
+      <div class="tab" onclick="go('katalog',this)">📚 Katalog</div>
+      <div class="tab" onclick="go('bajet',this)">💰 Bajet</div>
+      <div class="tab" onclick="go('laporan',this)">📊 Laporan</div>
+      <div class="tab" onclick="go('penilaian',this)">⭐ Penilaian</div>
+      <div class="tab" onclick="go('staf',this)">👥 Staf</div>
+    </div>
 
-  <div class="card full">
-    <h2>&#128203; Senarai Hidangan Melayu &mdash; Maklumat Lengkap</h2>
-    <p class="sub">Populariti, kategori, kalori, protein, asal negeri &amp; tahap kepedasan</p>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Hidangan</th><th>Kategori</th><th>Populariti</th>
-          <th>Kalori (kcal)</th><th>Protein (g)</th><th>Asal Negeri</th><th>Pedas</th>
-        </tr>
-      </thead>
-      <tbody id="tb"></tbody>
-    </table>
-  </div>
+    <!-- ═══════════════════════════════════ OVERVIEW ═══════════ -->
+    <div class="panel active" id="panel-overview">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Jumlah Staf</div><div class="kpi-val">87</div><div class="kpi-sub">Politeknik Mukah</div></div>
+        <div class="kpi"><div class="kpi-label">Terlatih 2026</div><div class="kpi-val">64</div><div class="kpi-sub kpi-up">▲ 73.6% daripada sasaran</div></div>
+        <div class="kpi"><div class="kpi-label">Permohonan Aktif</div><div class="kpi-val">12</div><div class="kpi-sub">8 menunggu kelulusan</div></div>
+        <div class="kpi"><div class="kpi-label">Bajet Digunakan</div><div class="kpi-val">68%</div><div class="kpi-sub">RM 68,400 / RM 100,000</div></div>
+        <div class="kpi"><div class="kpi-label">Kursus Dijalankan</div><div class="kpi-val">29</div><div class="kpi-sub">Jan–Okt 2026</div></div>
+        <div class="kpi"><div class="kpi-label">Purata CPD/Staf</div><div class="kpi-val">18.4j</div><div class="kpi-sub kpi-up">▲ Sasaran: 20 jam</div></div>
+      </div>
 
-</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Bilangan Latihan Mengikut Bulan (2026)</div>
+          <svg class="chart" height="170" viewBox="0 0 400 170">
+            <line x1="42" y1="10" x2="42" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="140" x2="396" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="107" x2="396" y2="107" stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="75"  x2="396" y2="75"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="42"  x2="396" y2="42"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="10"  x2="396" y2="10"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <text x="36" y="143" font-size="8" fill="#57606a" text-anchor="end">0</text>
+            <text x="36" y="110" font-size="8" fill="#57606a" text-anchor="end">2</text>
+            <text x="36" y="78"  font-size="8" fill="#57606a" text-anchor="end">4</text>
+            <text x="36" y="45"  font-size="8" fill="#57606a" text-anchor="end">6</text>
+            <text x="36" y="13"  font-size="8" fill="#57606a" text-anchor="end">8</text>
+            <!-- scale: 130px/8unit=16.25px per unit. y=140-(val*16.25) -->
+            <!-- Jan=2,Feb=1,Mar=3,Apr=2,Mei=4,Jun=3,Jul=2,Ogs=5,Sep=4,Okt=3 -->
+            <rect x="52"  y="107.5" width="22" height="32.5" fill="#3b82d4" rx="2"/>
+            <rect x="84"  y="123.75" width="22" height="16.25" fill="#3b82d4" rx="2"/>
+            <rect x="116" y="91.25" width="22" height="48.75" fill="#3b82d4" rx="2"/>
+            <rect x="148" y="107.5" width="22" height="32.5" fill="#3b82d4" rx="2"/>
+            <rect x="180" y="75"   width="22" height="65"    fill="#1e3a5f" rx="2"/>
+            <rect x="212" y="91.25" width="22" height="48.75" fill="#3b82d4" rx="2"/>
+            <rect x="244" y="107.5" width="22" height="32.5" fill="#3b82d4" rx="2"/>
+            <rect x="276" y="58.75" width="22" height="81.25" fill="#1e3a5f" rx="2"/>
+            <rect x="308" y="75"   width="22" height="65"    fill="#3b82d4" rx="2"/>
+            <rect x="340" y="91.25" width="22" height="48.75" fill="#3b82d4" rx="2"/>
+            <text x="63"  y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jan</text>
+            <text x="95"  y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Feb</text>
+            <text x="127" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Mac</text>
+            <text x="159" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Apr</text>
+            <text x="191" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Mei</text>
+            <text x="223" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jun</text>
+            <text x="255" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jul</text>
+            <text x="287" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Ogs</text>
+            <text x="319" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Sep</text>
+            <text x="351" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Okt</text>
+          </svg>
+        </div>
 
-<footer>Made with IBM Bob &nbsp;&bull;&nbsp; Dashboard Makanan Melayu Malaysia 2024</footer>
+        <div class="card">
+          <div class="card-title">Latihan Mengikut Kategori</div>
+          <svg class="chart" height="165" viewBox="0 0 310 165">
+            <!-- Pie: Teknikal=10(34%), Kepimpinan=7(24%), ICT=6(21%), Kemahiran=4(14%), K&K=2(7%) -->
+            <!-- r=58 cx=78 cy=75 -->
+            <path d="M78,75 L78,17 A58,58 0 0,1 127.3,104 Z" fill="#3b82d4"/>
+            <path d="M78,75 L127.3,104 A58,58 0 0,1 57.8,131.6 Z" fill="#1e3a5f"/>
+            <path d="M78,75 L57.8,131.6 A58,58 0 0,1 22.4,55 Z" fill="#7c5cd8"/>
+            <path d="M78,75 L22.4,55 A58,58 0 0,1 53.5,18.4 Z" fill="#f59e0b"/>
+            <path d="M78,75 L53.5,18.4 A58,58 0 0,1 78,17 Z" fill="#ef4444"/>
+            <text x="78" y="72" font-size="12" font-weight="700" fill="#1f2328" text-anchor="middle">29</text>
+            <text x="78" y="85" font-size="9" fill="#57606a" text-anchor="middle">kursus</text>
+            <rect x="160" y="22" width="9" height="9" rx="2" fill="#3b82d4"/>
+            <text x="172" y="30" font-size="10" fill="#57606a">Teknikal (10)</text>
+            <rect x="160" y="40" width="9" height="9" rx="2" fill="#1e3a5f"/>
+            <text x="172" y="48" font-size="10" fill="#57606a">Kepimpinan (7)</text>
+            <rect x="160" y="58" width="9" height="9" rx="2" fill="#7c5cd8"/>
+            <text x="172" y="66" font-size="10" fill="#57606a">ICT (6)</text>
+            <rect x="160" y="76" width="9" height="9" rx="2" fill="#f59e0b"/>
+            <text x="172" y="84" font-size="10" fill="#57606a">K. Insaniah (4)</text>
+            <rect x="160" y="94" width="9" height="9" rx="2" fill="#ef4444"/>
+            <text x="172" y="102" font-size="10" fill="#57606a">Kesihatan (2)</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Permohonan Terkini</div>
+          <table>
+            <thead><tr><th>Staf</th><th>Kursus</th><th>Tarikh</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Ahmad Zulkifli</td><td>MS Office Advanced</td><td>10 Nov</td><td><span class="badge b-yellow">Menunggu</span></td></tr>
+              <tr><td>Noraini Hamid</td><td>Kepimpinan Strategik</td><td>12 Nov</td><td><span class="badge b-yellow">Menunggu</span></td></tr>
+              <tr><td>Mohd Faizal</td><td>Python for Data</td><td>15 Nov</td><td><span class="badge b-blue">Diluluskan</span></td></tr>
+              <tr><td>Zuraidah Salleh</td><td>HRMS Sistem</td><td>18 Nov</td><td><span class="badge b-green">Selesai</span></td></tr>
+              <tr><td>Khairul Anuar</td><td>Bengkel Inovasi</td><td>20 Nov</td><td><span class="badge b-yellow">Menunggu</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Aktiviti Terkini</div>
+          <ul class="activity-list">
+            <li class="activity-item"><div class="adot" style="background:#16a34a"></div><div><div class="atext">Pn. Zuraidah berjaya menamatkan kursus <strong>HRMS Sistem</strong></div><div class="atime">2 jam lepas</div></div></li>
+            <li class="activity-item"><div class="adot" style="background:#3b82d4"></div><div><div class="atext">Permohonan baru: <strong>En. Ahmad Zulkifli</strong> — MS Office Advanced</div><div class="atime">5 jam lepas</div></div></li>
+            <li class="activity-item"><div class="adot" style="background:#f59e0b"></div><div><div class="atext">Amaran: Baki bajet Kej. Awam tinggal <strong>RM 1,200</strong></div><div class="atime">Semalam</div></div></li>
+            <li class="activity-item"><div class="adot" style="background:#7c5cd8"></div><div><div class="atext">Katalog kursus Nov–Dis 2026 dikemaskini (8 kursus baru)</div><div class="atime">2 hari lepas</div></div></li>
+            <li class="activity-item"><div class="adot" style="background:#16a34a"></div><div><div class="atext">En. Mohd Faizal diluluskan untuk <strong>Python for Data</strong></div><div class="atime">3 hari lepas</div></div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pencapaian CPD Mengikut Jabatan (Sasaran: 20 Jam / Staf)</div>
+        <table>
+          <thead><tr><th>Jabatan</th><th>Staf</th><th>Purata CPD (Jam)</th><th>Kemajuan</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Kejuruteraan Awam</td><td>14</td><td>22.1</td><td><div class="prog-wrap"><div class="prog-bar pg" style="width:100%"></div></div></td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>Kejuruteraan Mekanikal</td><td>11</td><td>19.8</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:99%"></div></div></td><td><span class="badge b-blue">Hampir</span></td></tr>
+            <tr><td>Kejuruteraan Elektrik</td><td>13</td><td>17.5</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:87%"></div></div></td><td><span class="badge b-yellow">Sedang</span></td></tr>
+            <tr><td>Perdagangan</td><td>16</td><td>15.2</td><td><div class="prog-wrap"><div class="prog-bar po" style="width:76%"></div></div></td><td><span class="badge b-yellow">Sedang</span></td></tr>
+            <tr><td>Hospitaliti</td><td>10</td><td>12.8</td><td><div class="prog-wrap"><div class="prog-bar po" style="width:64%"></div></div></td><td><span class="badge b-red">Perlu Tindakan</span></td></tr>
+            <tr><td>Pentadbiran</td><td>12</td><td>20.5</td><td><div class="prog-wrap"><div class="prog-bar pg" style="width:100%"></div></div></td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>Teknologi Maklumat</td><td>11</td><td>24.3</td><td><div class="prog-wrap"><div class="prog-bar pg" style="width:100%"></div></div></td><td><span class="badge b-green">Tercapai</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ REKOD ═══════════ -->
+    <div class="panel" id="panel-rekod">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Jumlah Rekod</div><div class="kpi-val">342</div><div class="kpi-sub">Sejak 2022</div></div>
+        <div class="kpi"><div class="kpi-label">Tahun 2026</div><div class="kpi-val">89</div><div class="kpi-sub kpi-up">▲ 12% vs 2025</div></div>
+        <div class="kpi"><div class="kpi-label">Sijil Dikeluarkan</div><div class="kpi-val">214</div><div class="kpi-sub">Tersimpan dalam sistem</div></div>
+        <div class="kpi"><div class="kpi-label">Kursus Luar</div><div class="kpi-val">63%</div><div class="kpi-sub">37% dalaman</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rekod Latihan Staf 2026</div>
+        <table>
+          <thead><tr><th>#</th><th>Nama Staf</th><th>Jabatan</th><th>Nama Kursus</th><th>Tarikh</th><th>Tempat</th><th>CPD (j)</th><th>Sijil</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Ahmad Zulkifli b. Ismail</td><td>Kej. Awam</td><td>AutoCAD Professional 2026</td><td>15 Jan</td><td>KL</td><td>16</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>2</td><td>Noraini bt Hamid</td><td>Perdagangan</td><td>Kepimpinan Strategik AKEPT</td><td>22 Jan</td><td>Putrajaya</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>3</td><td>Mohd Faizal b. Razak</td><td>Teknologi Maklumat</td><td>Python for Data Analysis</td><td>5 Feb</td><td>Mukah</td><td>8</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>4</td><td>Zuraidah bt Salleh</td><td>Pentadbiran</td><td>Sistem HRMS Baharu</td><td>18 Feb</td><td>Kuching</td><td>16</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>5</td><td>Khairul Anuar b. Hassan</td><td>Kej. Mekanikal</td><td>Bengkel Inovasi Pengajaran</td><td>3 Mac</td><td>Mukah</td><td>8</td><td><span class="badge b-yellow">Pending</span></td></tr>
+            <tr><td>6</td><td>Siti Zulaikha bt Omar</td><td>Hospitaliti</td><td>Pengurusan Acara Moden</td><td>14 Mac</td><td>Sibu</td><td>16</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>7</td><td>Hafizuddin b. Mahmud</td><td>Kej. Elektrik</td><td>Keselamatan Elektrik NIOSH</td><td>28 Mac</td><td>KL</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>8</td><td>Rozita bt Abd Karim</td><td>Perdagangan</td><td>Perakaunan Berkomputer</td><td>10 Apr</td><td>Mukah</td><td>16</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>9</td><td>Amirul Haziq b. Zain</td><td>Teknologi Maklumat</td><td>Keselamatan Siber Asas</td><td>22 Apr</td><td>Kuching</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>10</td><td>Mazlina bt Daud</td><td>Kej. Awam</td><td>BIM Autodesk Revit</td><td>6 Mei</td><td>KL</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>11</td><td>Norhasliza bt Bakar</td><td>Pentadbiran</td><td>Pengurusan Rekod Elektronik</td><td>19 Mei</td><td>Mukah</td><td>8</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>12</td><td>Jasmin bt Jamil</td><td>Hospitaliti</td><td>Perkhidmatan Pelanggan Cemerlang</td><td>2 Jun</td><td>Sibu</td><td>16</td><td><span class="badge b-yellow">Pending</span></td></tr>
+            <tr><td>13</td><td>Roslan b. Talib</td><td>Kej. Awam</td><td>Pengurusan Tapak Binaan</td><td>18 Jun</td><td>KL</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>14</td><td>Faizah bt Idris</td><td>Kej. Mekanikal</td><td>CNC Machine Operation</td><td>2 Jul</td><td>Kuching</td><td>32</td><td><span class="badge b-green">Ada</span></td></tr>
+            <tr><td>15</td><td>Azri b. Hamzah</td><td>Kej. Elektrik</td><td>PLC Automation Siemens</td><td>20 Jul</td><td>KL</td><td>24</td><td><span class="badge b-green">Ada</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ PERMOHONAN ═══════════ -->
+    <div class="panel" id="panel-permohonan">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Jumlah 2026</div><div class="kpi-val">47</div><div class="kpi-sub">Permohonan diterima</div></div>
+        <div class="kpi"><div class="kpi-label">Diluluskan</div><div class="kpi-val">31</div><div class="kpi-sub kpi-up">65.9%</div></div>
+        <div class="kpi"><div class="kpi-label">Menunggu</div><div class="kpi-val">8</div><div class="kpi-sub">Perlu tindakan segera</div></div>
+        <div class="kpi"><div class="kpi-label">Ditolak</div><div class="kpi-val">5</div><div class="kpi-sub kpi-dn">10.6%</div></div>
+        <div class="kpi"><div class="kpi-label">Dibatalkan</div><div class="kpi-val">3</div><div class="kpi-sub">Oleh pemohon</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Senarai Permohonan Latihan 2026</div>
+        <table>
+          <thead><tr><th>No. Permohonan</th><th>Nama Staf</th><th>Jabatan</th><th>Kursus</th><th>Tarikh Kursus</th><th>Kos (RM)</th><th>Mohon Pada</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>PLM-2026-047</td><td>Ahmad Zulkifli</td><td>Kej. Awam</td><td>MS Office Advanced</td><td>10 Nov 2026</td><td>350</td><td>28 Okt</td><td><span class="badge b-yellow">Menunggu Penyelia</span></td></tr>
+            <tr><td>PLM-2026-046</td><td>Noraini Hamid</td><td>Perdagangan</td><td>Kepimpinan Strategik</td><td>12 Nov 2026</td><td>1,200</td><td>27 Okt</td><td><span class="badge b-yellow">Menunggu Unit Latihan</span></td></tr>
+            <tr><td>PLM-2026-045</td><td>Mohd Faizal</td><td>TM</td><td>Python for Data</td><td>15 Nov 2026</td><td>500</td><td>25 Okt</td><td><span class="badge b-blue">Diluluskan</span></td></tr>
+            <tr><td>PLM-2026-044</td><td>Khairul Anuar</td><td>Kej. Mekanikal</td><td>Bengkel Inovasi</td><td>20 Nov 2026</td><td>200</td><td>24 Okt</td><td><span class="badge b-yellow">Menunggu Penyelia</span></td></tr>
+            <tr><td>PLM-2026-043</td><td>Amirul Haziq</td><td>TM</td><td>Cloud Computing AWS</td><td>22 Nov 2026</td><td>800</td><td>22 Okt</td><td><span class="badge b-blue">Diluluskan</span></td></tr>
+            <tr><td>PLM-2026-042</td><td>Rozita Abd Karim</td><td>Perdagangan</td><td>Cukai Lanjutan</td><td>25 Nov 2026</td><td>450</td><td>20 Okt</td><td><span class="badge b-red">Ditolak</span></td></tr>
+            <tr><td>PLM-2026-041</td><td>Mazlina Daud</td><td>Kej. Awam</td><td>Pengurusan Projek PMP</td><td>1 Dis 2026</td><td>2,500</td><td>18 Okt</td><td><span class="badge b-yellow">Menunggu Pengarah</span></td></tr>
+            <tr><td>PLM-2026-040</td><td>Hafizuddin Mahmud</td><td>Kej. Elektrik</td><td>Solar PV Installer</td><td>5 Dis 2026</td><td>1,800</td><td>15 Okt</td><td><span class="badge b-blue">Diluluskan</span></td></tr>
+            <tr><td>PLM-2026-039</td><td>Siti Zulaikha</td><td>Hospitaliti</td><td>F&amp;B Management Pro</td><td>8 Dis 2026</td><td>650</td><td>12 Okt</td><td><span class="badge b-green">Selesai</span></td></tr>
+            <tr><td>PLM-2026-038</td><td>Norhasliza Bakar</td><td>Pentadbiran</td><td>eSPKB Modul Terkini</td><td>10 Dis 2026</td><td>300</td><td>10 Okt</td><td><span class="badge b-blue">Diluluskan</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ KATALOG ═══════════ -->
+    <div class="panel" id="panel-katalog">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Kursus Tersedia</div><div class="kpi-val">38</div><div class="kpi-sub">Nov–Dis 2026</div></div>
+        <div class="kpi"><div class="kpi-label">Dalaman</div><div class="kpi-val">15</div><div class="kpi-sub">Di Politeknik Mukah</div></div>
+        <div class="kpi"><div class="kpi-label">Luaran</div><div class="kpi-val">23</div><div class="kpi-sub">KL, Kuching, Sibu</div></div>
+        <div class="kpi"><div class="kpi-label">Tempat Tersedia</div><div class="kpi-val">142</div><div class="kpi-sub">Jumlah semua kursus</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Katalog Kursus — November &amp; Disember 2026</div>
+        <table>
+          <thead><tr><th>Kod</th><th>Nama Kursus</th><th>Kategori</th><th>Tarikh</th><th>Tempat</th><th>Tempoh</th><th>Kos (RM)</th><th>Tempat Ada</th><th>Jenis</th></tr></thead>
+          <tbody>
+            <tr><td>KRS-101</td><td>MS Office 365 Advanced</td><td>ICT</td><td>10 Nov</td><td>Mukah</td><td>2 hari</td><td>350</td><td>20</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+            <tr><td>KRS-102</td><td>Kepimpinan Strategik AKEPT</td><td>Kepimpinan</td><td>12 Nov</td><td>Putrajaya</td><td>3 hari</td><td>1,200</td><td>5</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-103</td><td>Python for Data Analysis</td><td>ICT</td><td>15 Nov</td><td>Mukah</td><td>2 hari</td><td>500</td><td>15</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+            <tr><td>KRS-104</td><td>Bengkel Inovasi Pengajaran</td><td>Teknikal</td><td>20 Nov</td><td>Mukah</td><td>1 hari</td><td>200</td><td>30</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+            <tr><td>KRS-105</td><td>Cloud Computing AWS</td><td>ICT</td><td>22 Nov</td><td>Kuching</td><td>3 hari</td><td>800</td><td>8</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-106</td><td>Pengurusan Projek PMP</td><td>Kepimpinan</td><td>1 Dis</td><td>KL</td><td>5 hari</td><td>2,500</td><td>3</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-107</td><td>Solar PV Installer</td><td>Teknikal</td><td>5 Dis</td><td>KL</td><td>3 hari</td><td>1,800</td><td>6</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-108</td><td>eSPKB Modul Terkini</td><td>Soft Skills</td><td>10 Dis</td><td>Mukah</td><td>1 hari</td><td>300</td><td>25</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+            <tr><td>KRS-109</td><td>BIM Revit Architecture</td><td>Teknikal</td><td>12 Dis</td><td>KL</td><td>4 hari</td><td>2,200</td><td>5</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-110</td><td>Etika &amp; Profesionalisme Awam</td><td>Soft Skills</td><td>15 Dis</td><td>Mukah</td><td>1 hari</td><td>150</td><td>40</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+            <tr><td>KRS-111</td><td>Sistem Maklumat Geografi (GIS)</td><td>Teknikal</td><td>18 Dis</td><td>Kuching</td><td>2 hari</td><td>900</td><td>10</td><td><span class="badge b-purple">Luaran</span></td></tr>
+            <tr><td>KRS-112</td><td>Pengurusan Kualiti ISO 9001</td><td>Kepimpinan</td><td>20 Dis</td><td>Mukah</td><td>2 hari</td><td>600</td><td>20</td><td><span class="badge b-blue">Dalaman</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ BAJET ═══════════ -->
+    <div class="panel" id="panel-bajet">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Peruntukan 2026</div><div class="kpi-val">RM 100K</div><div class="kpi-sub">Keseluruhan</div></div>
+        <div class="kpi"><div class="kpi-label">Dibelanjakan</div><div class="kpi-val">RM 68.4K</div><div class="kpi-sub kpi-up">68.4%</div></div>
+        <div class="kpi"><div class="kpi-label">Baki</div><div class="kpi-val">RM 31.6K</div><div class="kpi-sub">Nov–Dis 2026</div></div>
+        <div class="kpi"><div class="kpi-label">Tuntutan Pending</div><div class="kpi-val">RM 8,250</div><div class="kpi-sub">7 tuntutan belum selesai</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Perbelanjaan Bulanan 2026 (RM)</div>
+          <svg class="chart" height="170" viewBox="0 0 400 170">
+            <line x1="42" y1="10" x2="42" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="140" x2="396" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="107" x2="396" y2="107" stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="75"  x2="396" y2="75"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="42"  x2="396" y2="42"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="10"  x2="396" y2="10"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <text x="36" y="143" font-size="8" fill="#57606a" text-anchor="end">0</text>
+            <text x="36" y="110" font-size="8" fill="#57606a" text-anchor="end">3k</text>
+            <text x="36" y="78"  font-size="8" fill="#57606a" text-anchor="end">6k</text>
+            <text x="36" y="45"  font-size="8" fill="#57606a" text-anchor="end">9k</text>
+            <text x="36" y="13"  font-size="8" fill="#57606a" text-anchor="end">12k</text>
+            <!-- scale: 130px/12k = 10.83px per 1k. y=140-(val*10.83) -->
+            <!-- Jan=3.2,Feb=2.1,Mac=5.8,Apr=4.5,Mei=9.2,Jun=6.4,Jul=3.8,Ogs=11.6,Sep=8.4,Okt=5.1 -->
+            <rect x="52"  y="105.3" width="22" height="34.7" fill="#3b82d4" rx="2"/>
+            <rect x="84"  y="117.3" width="22" height="22.7" fill="#3b82d4" rx="2"/>
+            <rect x="116" y="77.2"  width="22" height="62.8" fill="#3b82d4" rx="2"/>
+            <rect x="148" y="91.3"  width="22" height="48.7" fill="#3b82d4" rx="2"/>
+            <rect x="180" y="40.4"  width="22" height="99.6" fill="#1e3a5f" rx="2"/>
+            <rect x="212" y="70.7"  width="22" height="69.3" fill="#3b82d4" rx="2"/>
+            <rect x="244" y="98.9"  width="22" height="41.1" fill="#3b82d4" rx="2"/>
+            <rect x="276" y="14.5"  width="22" height="125.5" fill="#1e3a5f" rx="2"/>
+            <rect x="308" y="49.1"  width="22" height="90.9" fill="#3b82d4" rx="2"/>
+            <rect x="340" y="84.8"  width="22" height="55.2" fill="#3b82d4" rx="2"/>
+            <text x="63"  y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jan</text>
+            <text x="95"  y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Feb</text>
+            <text x="127" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Mac</text>
+            <text x="159" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Apr</text>
+            <text x="191" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Mei</text>
+            <text x="223" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jun</text>
+            <text x="255" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Jul</text>
+            <text x="287" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Ogs</text>
+            <text x="319" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Sep</text>
+            <text x="351" y="155" font-size="8.5" fill="#57606a" text-anchor="middle">Okt</text>
+          </svg>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Peruntukan &amp; Perbelanjaan Mengikut Jabatan</div>
+          <table>
+            <thead><tr><th>Jabatan</th><th>Peruntukan</th><th>Dibelanja</th><th>%</th></tr></thead>
+            <tbody>
+              <tr><td>Kej. Awam</td><td>RM 18,000</td><td>RM 14,200</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:79%"></div></div></td></tr>
+              <tr><td>Kej. Mekanikal</td><td>RM 15,000</td><td>RM 11,800</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:79%"></div></div></td></tr>
+              <tr><td>Kej. Elektrik</td><td>RM 16,000</td><td>RM 13,400</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:84%"></div></div></td></tr>
+              <tr><td>Perdagangan</td><td>RM 18,000</td><td>RM 9,500</td><td><div class="prog-wrap"><div class="prog-bar po" style="width:53%"></div></div></td></tr>
+              <tr><td>Hospitaliti</td><td>RM 12,000</td><td>RM 7,300</td><td><div class="prog-wrap"><div class="prog-bar po" style="width:61%"></div></div></td></tr>
+              <tr><td>Pentadbiran</td><td>RM 10,000</td><td>RM 6,800</td><td><div class="prog-wrap"><div class="prog-bar pb" style="width:68%"></div></div></td></tr>
+              <tr><td>Teknologi Maklumat</td><td>RM 11,000</td><td>RM 5,400</td><td><div class="prog-wrap"><div class="prog-bar pg" style="width:49%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Senarai Tuntutan Latihan</div>
+        <table>
+          <thead><tr><th>No. Tuntutan</th><th>Nama Staf</th><th>Kursus</th><th>Tarikh</th><th>Jumlah (RM)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>TUN-2026-031</td><td>Ahmad Zulkifli</td><td>AutoCAD Professional</td><td>15 Jan</td><td>1,850</td><td><span class="badge b-green">Selesai Bayar</span></td></tr>
+            <tr><td>TUN-2026-032</td><td>Noraini Hamid</td><td>Kepimpinan Strategik</td><td>22 Jan</td><td>2,400</td><td><span class="badge b-green">Selesai Bayar</span></td></tr>
+            <tr><td>TUN-2026-033</td><td>Hafizuddin Mahmud</td><td>Keselamatan Elektrik NIOSH</td><td>28 Mac</td><td>3,100</td><td><span class="badge b-green">Selesai Bayar</span></td></tr>
+            <tr><td>TUN-2026-034</td><td>Mazlina Daud</td><td>BIM Autodesk Revit</td><td>6 Mei</td><td>2,800</td><td><span class="badge b-yellow">Dalam Proses</span></td></tr>
+            <tr><td>TUN-2026-035</td><td>Amirul Haziq</td><td>Keselamatan Siber Asas</td><td>22 Apr</td><td>1,600</td><td><span class="badge b-yellow">Dalam Proses</span></td></tr>
+            <tr><td>TUN-2026-036</td><td>Khairul Anuar</td><td>Bengkel Inovasi</td><td>3 Mac</td><td>850</td><td><span class="badge b-red">Dokumen Tidak Lengkap</span></td></tr>
+            <tr><td>TUN-2026-037</td><td>Faizah bt Idris</td><td>CNC Machine Operation</td><td>2 Jul</td><td>2,200</td><td><span class="badge b-yellow">Dalam Proses</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ LAPORAN ═══════════ -->
+    <div class="panel" id="panel-laporan">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Laporan Jana 2026</div><div class="kpi-val">18</div><div class="kpi-sub">Pelbagai jenis</div></div>
+        <div class="kpi"><div class="kpi-label">Eksport PDF</div><div class="kpi-val">42</div><div class="kpi-sub">Dimuat turun</div></div>
+        <div class="kpi"><div class="kpi-label">Eksport Excel</div><div class="kpi-val">27</div><div class="kpi-sub">Dimuat turun</div></div>
+        <div class="kpi"><div class="kpi-label">Laporan Pending</div><div class="kpi-val">3</div><div class="kpi-sub kpi-dn">Perlu dikemukakan</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Tren Bilangan Latihan — 5 Tahun (2022–2026)</div>
+          <svg class="chart" height="170" viewBox="0 0 380 170">
+            <line x1="42" y1="10" x2="42" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="140" x2="370" y2="140" stroke="#e5e7eb"/>
+            <line x1="42" y1="107" x2="370" y2="107" stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="75"  x2="370" y2="75"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="42"  x2="370" y2="42"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <line x1="42" y1="10"  x2="370" y2="10"  stroke="#e5e7eb" stroke-dasharray="4,3" stroke-width="0.5"/>
+            <text x="36" y="143" font-size="8" fill="#57606a" text-anchor="end">0</text>
+            <text x="36" y="110" font-size="8" fill="#57606a" text-anchor="end">10</text>
+            <text x="36" y="78"  font-size="8" fill="#57606a" text-anchor="end">20</text>
+            <text x="36" y="45"  font-size="8" fill="#57606a" text-anchor="end">30</text>
+            <text x="36" y="13"  font-size="8" fill="#57606a" text-anchor="end">40</text>
+            <!-- scale 130px/40=3.25px. y=140-(val*3.25) -->
+            <!-- 2022=18,2023=21,2024=24,2025=26,2026=29 -->
+            <polyline points="88,81.5 160,71.75 232,62 304,55.5 352,45.75" fill="none" stroke="#3b82d4" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="88"  cy="81.5"  r="5" fill="#3b82d4"/>
+            <circle cx="160" cy="71.75" r="5" fill="#3b82d4"/>
+            <circle cx="232" cy="62"    r="5" fill="#3b82d4"/>
+            <circle cx="304" cy="55.5"  r="5" fill="#3b82d4"/>
+            <circle cx="352" cy="45.75" r="6" fill="#1e3a5f"/>
+            <text x="88"  y="155" font-size="9" fill="#57606a" text-anchor="middle">2022</text>
+            <text x="160" y="155" font-size="9" fill="#57606a" text-anchor="middle">2023</text>
+            <text x="232" y="155" font-size="9" fill="#57606a" text-anchor="middle">2024</text>
+            <text x="304" y="155" font-size="9" fill="#57606a" text-anchor="middle">2025</text>
+            <text x="352" y="155" font-size="9" fill="#57606a" text-anchor="middle">2026</text>
+            <text x="88"  y="73"  font-size="10" fill="#1f2328" text-anchor="middle" font-weight="700">18</text>
+            <text x="160" y="63"  font-size="10" fill="#1f2328" text-anchor="middle" font-weight="700">21</text>
+            <text x="232" y="53"  font-size="10" fill="#1f2328" text-anchor="middle" font-weight="700">24</text>
+            <text x="304" y="47"  font-size="10" fill="#1f2328" text-anchor="middle" font-weight="700">26</text>
+            <text x="352" y="37"  font-size="10" fill="#1f2328" text-anchor="middle" font-weight="700">29</text>
+          </svg>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Perbelanjaan vs Peruntukan Tahunan (RM)</div>
+          <table>
+            <thead><tr><th>Tahun</th><th>Peruntukan</th><th>Perbelanjaan</th><th>Baki</th><th>%</th></tr></thead>
+            <tbody>
+              <tr><td>2022</td><td>70,000</td><td>58,400</td><td>11,600</td><td><span class="badge b-blue">83.4%</span></td></tr>
+              <tr><td>2023</td><td>80,000</td><td>71,200</td><td>8,800</td><td><span class="badge b-blue">89.0%</span></td></tr>
+              <tr><td>2024</td><td>85,000</td><td>79,600</td><td>5,400</td><td><span class="badge b-green">93.6%</span></td></tr>
+              <tr><td>2025</td><td>90,000</td><td>84,100</td><td>5,900</td><td><span class="badge b-green">93.4%</span></td></tr>
+              <tr><td>2026*</td><td>100,000</td><td>68,400</td><td>31,600</td><td><span class="badge b-yellow">68.4%</span></td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:10px;color:#57606a;margin-top:8px;">* Sehingga Oktober 2026</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Senarai Laporan</div>
+        <table>
+          <thead><tr><th>Nama Laporan</th><th>Tempoh</th><th>Tarikh Jana</th><th>Format</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Laporan Latihan Tahunan 2025</td><td>Jan–Dis 2025</td><td>15 Jan 2026</td><td>PDF, Excel</td><td><span class="badge b-green">Selesai</span></td></tr>
+            <tr><td>Laporan CPD Semester 1/2026</td><td>Jan–Jun 2026</td><td>10 Jul 2026</td><td>PDF</td><td><span class="badge b-green">Selesai</span></td></tr>
+            <tr><td>Laporan Perbelanjaan Bajet Q3/2026</td><td>Jul–Sep 2026</td><td>5 Okt 2026</td><td>Excel</td><td><span class="badge b-green">Selesai</span></td></tr>
+            <tr><td>Laporan CPD Semester 2/2026</td><td>Jul–Dis 2026</td><td>—</td><td>PDF</td><td><span class="badge b-yellow">Belum Jana</span></td></tr>
+            <tr><td>Laporan Latihan Tahunan 2026</td><td>Jan–Dis 2026</td><td>—</td><td>PDF, Excel</td><td><span class="badge b-yellow">Belum Jana</span></td></tr>
+            <tr><td>Laporan KPI Unit Latihan 2026</td><td>Jan–Dis 2026</td><td>—</td><td>PDF</td><td><span class="badge b-red">Perlu Segera</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ PENILAIAN ═══════════ -->
+    <div class="panel" id="panel-penilaian">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Purata Penilaian</div><div class="kpi-val">4.2/5</div><div class="kpi-sub kpi-up">▲ +0.3 vs 2025</div></div>
+        <div class="kpi"><div class="kpi-label">Borang Diterima</div><div class="kpi-val">71</div><div class="kpi-sub">daripada 89 peserta</div></div>
+        <div class="kpi"><div class="kpi-label">Kadar Maklum Balas</div><div class="kpi-val">79.8%</div><div class="kpi-sub">Sasaran: 80%</div></div>
+        <div class="kpi"><div class="kpi-label">Rating Tertinggi</div><div class="kpi-val">4.9/5</div><div class="kpi-sub">Solar PV Installer</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Penilaian Kursus Terkini</div>
+        <table>
+          <thead><tr><th>Kursus</th><th>Peserta</th><th>Maklum Balas</th><th>Kandungan</th><th>Fasilitator</th><th>Logistik</th><th>Purata</th><th>Gred</th></tr></thead>
+          <tbody>
+            <tr><td>AutoCAD Professional 2026</td><td>12</td><td>11</td><td>4.5</td><td>4.8</td><td>4.2</td><td><strong>4.5</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Kepimpinan Strategik AKEPT</td><td>8</td><td>8</td><td>4.6</td><td>4.7</td><td>4.0</td><td><strong>4.4</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Python for Data Analysis</td><td>15</td><td>13</td><td>4.2</td><td>4.4</td><td>4.5</td><td><strong>4.4</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Sistem HRMS Baharu</td><td>20</td><td>14</td><td>3.8</td><td>4.0</td><td>3.5</td><td><strong>3.8</strong></td><td><span class="badge b-blue">Baik</span></td></tr>
+            <tr><td>Keselamatan Elektrik NIOSH</td><td>10</td><td>9</td><td>4.7</td><td>4.9</td><td>4.6</td><td><strong>4.7</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Bengkel Inovasi Pengajaran</td><td>25</td><td>16</td><td>3.5</td><td>3.8</td><td>3.2</td><td><strong>3.5</strong></td><td><span class="badge b-yellow">Memuaskan</span></td></tr>
+            <tr><td>BIM Autodesk Revit</td><td>6</td><td>6</td><td>4.8</td><td>4.7</td><td>4.4</td><td><strong>4.6</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Keselamatan Siber Asas</td><td>14</td><td>11</td><td>4.3</td><td>4.5</td><td>4.0</td><td><strong>4.3</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>Solar PV Installer</td><td>6</td><td>6</td><td>4.9</td><td>5.0</td><td>4.8</td><td><strong>4.9</strong></td><td><span class="badge b-green">Cemerlang</span></td></tr>
+            <tr><td>CNC Machine Operation</td><td>8</td><td>6</td><td>4.1</td><td>4.3</td><td>3.9</td><td><strong>4.1</strong></td><td><span class="badge b-blue">Baik</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════ STAF ═══════════ -->
+    <div class="panel" id="panel-staf">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Jumlah Staf</div><div class="kpi-val">87</div><div class="kpi-sub">Semua jabatan</div></div>
+        <div class="kpi"><div class="kpi-label">Telah Latihan</div><div class="kpi-val">64</div><div class="kpi-sub kpi-up">73.6%</div></div>
+        <div class="kpi"><div class="kpi-label">Belum Latihan</div><div class="kpi-val">23</div><div class="kpi-sub kpi-dn">26.4% — perlu tindakan</div></div>
+        <div class="kpi"><div class="kpi-label">Pensyarah</div><div class="kpi-val">52</div><div class="kpi-sub">Staf akademik</div></div>
+        <div class="kpi"><div class="kpi-label">Staf Sokongan</div><div class="kpi-val">35</div><div class="kpi-sub">Pentadbiran &amp; teknikal</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Senarai Staf &amp; Status Latihan 2026</div>
+        <table>
+          <thead><tr><th>#</th><th>Nama</th><th>No. Pekerja</th><th>Jawatan</th><th>Jabatan</th><th>Jenis</th><th>CPD (j)</th><th>Kursus</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Ahmad Zulkifli b. Ismail</td><td>PM001</td><td>Pensyarah Kanan</td><td>Kej. Awam</td><td>Akademik</td><td>24</td><td>2</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>2</td><td>Noraini bt Hamid</td><td>PM002</td><td>Pensyarah</td><td>Perdagangan</td><td>Akademik</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>3</td><td>Mohd Faizal b. Razak</td><td>PM003</td><td>Pensyarah</td><td>TM</td><td>Akademik</td><td>28</td><td>3</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>4</td><td>Zuraidah bt Salleh</td><td>PM004</td><td>Pembantu Tadbir</td><td>Pentadbiran</td><td>Sokongan</td><td>16</td><td>1</td><td><span class="badge b-blue">Hampir</span></td></tr>
+            <tr><td>5</td><td>Khairul Anuar b. Hassan</td><td>PM005</td><td>Pensyarah</td><td>Kej. Mekanikal</td><td>Akademik</td><td>8</td><td>1</td><td><span class="badge b-yellow">Sedang</span></td></tr>
+            <tr><td>6</td><td>Siti Zulaikha bt Omar</td><td>PM006</td><td>Pensyarah</td><td>Hospitaliti</td><td>Akademik</td><td>16</td><td>1</td><td><span class="badge b-blue">Hampir</span></td></tr>
+            <tr><td>7</td><td>Hafizuddin b. Mahmud</td><td>PM007</td><td>Pensyarah Kanan</td><td>Kej. Elektrik</td><td>Akademik</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>8</td><td>Rozita bt Abd Karim</td><td>PM008</td><td>Pensyarah</td><td>Perdagangan</td><td>Akademik</td><td>16</td><td>1</td><td><span class="badge b-blue">Hampir</span></td></tr>
+            <tr><td>9</td><td>Amirul Haziq b. Zain</td><td>PM009</td><td>Juruteknik</td><td>TM</td><td>Sokongan</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>10</td><td>Mazlina bt Daud</td><td>PM010</td><td>Pensyarah Kanan</td><td>Kej. Awam</td><td>Akademik</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>11</td><td>Norhasliza bt Bakar</td><td>PM011</td><td>Pembantu Tadbir</td><td>Pentadbiran</td><td>Sokongan</td><td>8</td><td>1</td><td><span class="badge b-yellow">Sedang</span></td></tr>
+            <tr><td>12</td><td>Jasmin bt Jamil</td><td>PM012</td><td>Pensyarah</td><td>Hospitaliti</td><td>Akademik</td><td>16</td><td>1</td><td><span class="badge b-blue">Hampir</span></td></tr>
+            <tr><td>13</td><td>Roslan b. Talib</td><td>PM013</td><td>Pensyarah</td><td>Kej. Awam</td><td>Akademik</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>14</td><td>Faizah bt Idris</td><td>PM014</td><td>Pensyarah</td><td>Kej. Mekanikal</td><td>Akademik</td><td>32</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>15</td><td>Azri b. Hamzah</td><td>PM015</td><td>Juruteknik Kanan</td><td>Kej. Elektrik</td><td>Sokongan</td><td>24</td><td>1</td><td><span class="badge b-green">Tercapai</span></td></tr>
+            <tr><td>16</td><td>Rosli b. Ahmad</td><td>PM016</td><td>Pensyarah</td><td>Kej. Mekanikal</td><td>Akademik</td><td>0</td><td>0</td><td><span class="badge b-red">Belum Latihan</span></td></tr>
+            <tr><td>17</td><td>Faridah bt Mohd Noor</td><td>PM017</td><td>Penolong Pendaftar</td><td>Pentadbiran</td><td>Sokongan</td><td>0</td><td>0</td><td><span class="badge b-red">Belum Latihan</span></td></tr>
+            <tr><td>18</td><td>Hamdan b. Saad</td><td>PM018</td><td>Pensyarah</td><td>Hospitaliti</td><td>Akademik</td><td>0</td><td>0</td><td><span class="badge b-red">Belum Latihan</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+
+  <div class="footer">Dashboard Unit Latihan Staff — Politeknik Mukah &nbsp;|&nbsp; Data Dummy 2026 &nbsp;|&nbsp; Made with IBM Bob</div>
+</main>
 
 <script>
-var D=[
-  {nama:"Nasi Lemak",     kat:"Nasi & Bubur",  pop:95,kal:644,pro:22,negeri:"Selangor / N. Sembilan",pedas:"Sederhana"},
-  {nama:"Rendang",        kat:"Lauk Pauk",     pop:88,kal:468,pro:35,negeri:"Negeri Sembilan",       pedas:"Rendah"},
-  {nama:"Laksa",          kat:"Mee & Bihun",   pop:85,kal:520,pro:18,negeri:"Pulau Pinang",          pedas:"Tinggi"},
-  {nama:"Satay",          kat:"Lauk Pauk",     pop:82,kal:340,pro:28,negeri:"Kajang, Selangor",      pedas:"Rendah"},
-  {nama:"Roti Canai",     kat:"Roti & Capati", pop:80,kal:300,pro:8, negeri:"Kuala Lumpur",          pedas:"Tiada"},
-  {nama:"Nasi Goreng",    kat:"Nasi & Bubur",  pop:78,kal:510,pro:20,negeri:"Kebangsaan",            pedas:"Sederhana"},
-  {nama:"Char Koay Teow", kat:"Mee & Bihun",   pop:74,kal:480,pro:16,negeri:"Pulau Pinang",          pedas:"Rendah"},
-  {nama:"Mee Goreng",     kat:"Mee & Bihun",   pop:72,kal:460,pro:15,negeri:"Kebangsaan",            pedas:"Sederhana"},
-  {nama:"Nasi Kerabu",    kat:"Nasi & Bubur",  pop:68,kal:390,pro:18,negeri:"Kelantan / Terengganu", pedas:"Sederhana"},
-  {nama:"Asam Pedas",     kat:"Lauk Pauk",     pop:65,kal:280,pro:25,negeri:"Johor / Melaka",        pedas:"Tinggi"}
-];
-var kb={"Nasi & Bubur":"badge-nasi","Mee & Bihun":"badge-mee","Lauk Pauk":"badge-lauk","Roti & Capati":"badge-roti"};
-var pc={"Tinggi":"#c0392b","Sederhana":"#e67e22","Rendah":"#27ae60","Tiada":"#57606a"};
+  var TITLES = {
+    overview:'Papan Pemuka Utama',
+    rekod:'Rekod Latihan Staf',
+    permohonan:'Permohonan Latihan',
+    katalog:'Katalog Kursus',
+    bajet:'Pengurusan Bajet & Tuntutan',
+    laporan:'Analitik & Laporan',
+    penilaian:'Penilaian Latihan',
+    staf:'Senarai Staf'
+  };
 
-var tb=document.getElementById("tb");
-D.forEach(function(d,i){
-  var tr=document.createElement("tr");
-  tr.innerHTML=
-    "<td>"+(i+1)+"</td>"+
-    "<td><strong>"+d.nama+"</strong></td>"+
-    "<td><span class='badge "+(kb[d.kat]||"badge-nasi")+"'>"+d.kat+"</span></td>"+
-    "<td><div style='display:flex;align-items:center;gap:8px'>"+
-      "<div class='bar-wrap' style='width:80px'><div class='bar-fill' style='width:"+d.pop+"%'></div></div>"+
-      "<span>"+d.pop+"%</span></div></td>"+
-    "<td>"+d.kal+"</td><td>"+d.pro+"</td><td>"+d.negeri+"</td>"+
-    "<td><strong style='color:"+pc[d.pedas]+"'>"+d.pedas+"</strong></td>";
-  tb.appendChild(tr);
-});
+  function go(name, el) {
+    // panels
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    var panel = document.getElementById('panel-' + name);
+    if (panel) panel.classList.add('active');
 
-function mc(id){return echarts.init(document.getElementById(id));}
+    // tabs
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    // nav items
+    document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
 
-mc("c1").setOption({
-  tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
-  grid:{left:20,right:20,bottom:80,top:20,containLabel:true},
-  xAxis:{type:"category",data:D.map(function(d){return d.nama;}),axisLabel:{rotate:25,fontSize:11}},
-  yAxis:{type:"value",max:100,name:"Indeks (%)"},
-  series:[{name:"Populariti",type:"bar",
-    data:D.map(function(d){return{value:d.pop,itemStyle:{borderRadius:[4,4,0,0],
-      color:d.pop>=90?"#c0392b":d.pop>=80?"#e74c3c":d.pop>=70?"#e67e22":"#f39c12"}};}),
-    label:{show:true,position:"top",fontSize:11,formatter:"{c}%"}
-  }]
-});
+    // activate clicked
+    if (el) el.classList.add('active');
 
-mc("c2").setOption({
-  tooltip:{trigger:"item",formatter:"{b}: {c}% ({d}%)"},
-  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:11}},
-  series:[{type:"pie",roseType:"area",radius:["18%","62%"],center:["50%","46%"],
-    data:[
-      {name:"Nasi & Bubur", value:28,itemStyle:{color:"#c0392b"}},
-      {name:"Mee & Bihun",  value:22,itemStyle:{color:"#e67e22"}},
-      {name:"Lauk Pauk",    value:18,itemStyle:{color:"#f1c40f"}},
-      {name:"Kuih-muih",    value:15,itemStyle:{color:"#27ae60"}},
-      {name:"Roti & Capati",value:10,itemStyle:{color:"#2980b9"}},
-      {name:"Minuman",      value:7, itemStyle:{color:"#8e44ad"}}
-    ],label:{fontSize:11}
-  }]
-});
+    // sync the other set (tabs vs nav)
+    var allClickables = document.querySelectorAll('[onclick*="go(\'' + name + '\'"]');
+    allClickables.forEach(function(c){ c.classList.add('active'); });
 
-mc("c3").setOption({
-  tooltip:{trigger:"axis"},
-  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:11}},
-  grid:{left:20,right:20,bottom:60,top:20,containLabel:true},
-  xAxis:{type:"category",data:D.map(function(d){return d.nama;}),axisLabel:{rotate:25,fontSize:10}},
-  yAxis:{type:"value"},
-  series:[
-    {name:"Kalori (kcal)",type:"line",smooth:true,data:D.map(function(d){return d.kal;}),
-      itemStyle:{color:"#e67e22"},areaStyle:{color:"rgba(230,126,34,0.12)"},symbol:"circle",symbolSize:6},
-    {name:"Protein (g)",  type:"line",smooth:true,data:D.map(function(d){return d.pro;}),
-      itemStyle:{color:"#27ae60"},symbol:"circle",symbolSize:6}
-  ]
-});
-
-mc("c4").setOption({
-  tooltip:{},
-  legend:{bottom:0,textStyle:{fontSize:11}},
-  radar:{indicator:[
-    {name:"Populariti",max:100},{name:"Rasa Pedas",max:100},
-    {name:"Mudah Ditemui",max:100},{name:"Nilai Nutrisi",max:100},
-    {name:"Harga Berpatutan",max:100},{name:"Masa Masak",max:100}
-  ],shape:"polygon",splitNumber:4,axisName:{fontSize:11},radius:"62%"},
-  series:[{type:"radar",data:[
-    {name:"Nasi Lemak",value:[95,60,98,65,90,85],itemStyle:{color:"#c0392b"},areaStyle:{opacity:0.15}},
-    {name:"Rendang",   value:[88,75,80,78,72,40],itemStyle:{color:"#2980b9"},areaStyle:{opacity:0.15}},
-    {name:"Laksa",     value:[85,80,85,60,80,70],itemStyle:{color:"#27ae60"},areaStyle:{opacity:0.15}}
-  ]}]
-});
-
-mc("c5").setOption({
-  tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
-  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:10}},
-  grid:{left:20,right:20,bottom:60,top:20,containLabel:true},
-  xAxis:{type:"category",data:["Nasi Lemak","Rendang","Laksa","Satay","Nasi Kerabu"],axisLabel:{fontSize:11}},
-  yAxis:{type:"value",max:100,name:"Skor"},
-  series:[
-    {name:"Selangor/KL",         type:"bar",data:[90,75,70,80,55],itemStyle:{color:"#c0392b"},barMaxWidth:18},
-    {name:"Kelantan/Terengganu", type:"bar",data:[75,80,65,70,95],itemStyle:{color:"#e67e22"},barMaxWidth:18},
-    {name:"Negeri Sembilan",     type:"bar",data:[70,95,60,65,50],itemStyle:{color:"#27ae60"},barMaxWidth:18},
-    {name:"Pulau Pinang",        type:"bar",data:[65,55,95,75,45],itemStyle:{color:"#2980b9"},barMaxWidth:18}
-  ]
-});
-
-window.addEventListener("resize",function(){
-  ["c1","c2","c3","c4","c5"].forEach(function(id){
-    var e=document.getElementById(id);
-    if(e){var i=echarts.getInstanceByDom(e);if(i)i.resize();}
-  });
-});
+    // title
+    var t = document.getElementById('page-title');
+    if (t && TITLES[name]) t.textContent = TITLES[name];
+  }
 </script>
 </body>
 </html>

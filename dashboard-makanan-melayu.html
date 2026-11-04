@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard Makanan Melayu Malaysia</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:#f0f2f5;color:#1f2328;font-size:14px;line-height:1.6}
+header{background:linear-gradient(135deg,#c0392b,#7b2d1f);color:#fff;padding:24px 32px;display:flex;align-items:center;gap:16px}
+header .flag{font-size:2.4rem}
+header h1{font-size:1.55rem;font-weight:700}
+header p{font-size:.85rem;opacity:.85;margin-top:2px}
+.kpi-row{display:flex;gap:16px;padding:24px 32px 0;flex-wrap:wrap}
+.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 22px;flex:1;min-width:150px;text-align:center}
+.kpi .num{font-size:2rem;font-weight:700;color:#c0392b}
+.kpi .lbl{font-size:.78rem;color:#57606a;margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:20px 32px 32px}
+@media(max-width:820px){.grid{grid-template-columns:1fr;padding:16px}.kpi-row{padding:16px 16px 0}header{padding:18px 16px}}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;overflow:hidden}
+.card.full{grid-column:1/-1}
+.card h2{font-size:.92rem;font-weight:600;color:#1f2328;margin-bottom:2px}
+.card p.sub{font-size:.75rem;color:#57606a;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px}
+thead th{background:#f7f8fa;color:#57606a;font-weight:600;padding:8px 12px;text-align:left;border-bottom:1px solid #e5e7eb}
+tbody tr:nth-child(even){background:#fafafa}
+tbody tr:hover{background:#f0f2f5}
+tbody td{padding:8px 12px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:600}
+.badge-nasi{background:#fde8e8;color:#c0392b}
+.badge-mee{background:#fef3e2;color:#d4780a}
+.badge-lauk{background:#e8f5e9;color:#1e7e34}
+.badge-roti{background:#f3e8fd;color:#7c3aed}
+.bar-wrap{background:#f0f2f5;border-radius:4px;height:8px;width:100%}
+.bar-fill{height:8px;border-radius:4px;background:#c0392b}
+footer{text-align:center;padding:20px;font-size:.72rem;color:#57606a;border-top:1px solid #e5e7eb;background:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="flag">&#127474;&#127486;</div>
+  <div>
+    <h1>Dashboard Makanan Melayu Malaysia</h1>
+    <p>Analisis populariti, nutrisi &amp; kepelbagaian hidangan tradisional &mdash; Data 2024</p>
+  </div>
+</header>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="num">10</div><div class="lbl">Hidangan Terpilih</div></div>
+  <div class="kpi"><div class="num">6</div><div class="lbl">Kategori Utama</div></div>
+  <div class="kpi"><div class="num">95%</div><div class="lbl">Populariti Tertinggi &mdash; Nasi Lemak</div></div>
+  <div class="kpi"><div class="num">644</div><div class="lbl">Kalori Tertinggi kcal &mdash; Nasi Lemak</div></div>
+  <div class="kpi"><div class="num">35g</div><div class="lbl">Protein Tertinggi &mdash; Rendang</div></div>
+</div>
+
+<div class="grid">
+
+  <div class="card full">
+    <h2>&#127859; 10 Makanan Melayu Paling Popular di Malaysia</h2>
+    <p class="sub">Berdasarkan tinjauan &amp; carian dalam talian 2024 (Indeks 0&ndash;100)</p>
+    <div id="c1" style="height:340px;width:100%"></div>
+  </div>
+
+  <div class="card">
+    <h2>&#127374; Agihan Kategori Makanan Melayu</h2>
+    <p class="sub">Mengikut jenis hidangan</p>
+    <div id="c2" style="height:320px;width:100%"></div>
+  </div>
+
+  <div class="card">
+    <h2>&#128293; Kalori &amp; Protein per Hidangan</h2>
+    <p class="sub">Per hidangan (anggaran purata)</p>
+    <div id="c3" style="height:320px;width:100%"></div>
+  </div>
+
+  <div class="card">
+    <h2>&#11088; Perbandingan Ciri 3 Hidangan Terbaik</h2>
+    <p class="sub">Nasi Lemak vs Rendang vs Laksa</p>
+    <div id="c4" style="height:340px;width:100%"></div>
+  </div>
+
+  <div class="card">
+    <h2>&#128506; Kepopularan Hidangan Mengikut Negeri</h2>
+    <p class="sub">Skor populariti (0&ndash;100) berdasarkan asal-usul hidangan</p>
+    <div id="c5" style="height:340px;width:100%"></div>
+  </div>
+
+  <div class="card full">
+    <h2>&#128203; Senarai Hidangan Melayu &mdash; Maklumat Lengkap</h2>
+    <p class="sub">Populariti, kategori, kalori, protein, asal negeri &amp; tahap kepedasan</p>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Hidangan</th><th>Kategori</th><th>Populariti</th>
+          <th>Kalori (kcal)</th><th>Protein (g)</th><th>Asal Negeri</th><th>Pedas</th>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>Made with IBM Bob &nbsp;&bull;&nbsp; Dashboard Makanan Melayu Malaysia 2024</footer>
+
+<script>
+var D=[
+  {nama:"Nasi Lemak",     kat:"Nasi & Bubur",  pop:95,kal:644,pro:22,negeri:"Selangor / N. Sembilan",pedas:"Sederhana"},
+  {nama:"Rendang",        kat:"Lauk Pauk",     pop:88,kal:468,pro:35,negeri:"Negeri Sembilan",       pedas:"Rendah"},
+  {nama:"Laksa",          kat:"Mee & Bihun",   pop:85,kal:520,pro:18,negeri:"Pulau Pinang",          pedas:"Tinggi"},
+  {nama:"Satay",          kat:"Lauk Pauk",     pop:82,kal:340,pro:28,negeri:"Kajang, Selangor",      pedas:"Rendah"},
+  {nama:"Roti Canai",     kat:"Roti & Capati", pop:80,kal:300,pro:8, negeri:"Kuala Lumpur",          pedas:"Tiada"},
+  {nama:"Nasi Goreng",    kat:"Nasi & Bubur",  pop:78,kal:510,pro:20,negeri:"Kebangsaan",            pedas:"Sederhana"},
+  {nama:"Char Koay Teow", kat:"Mee & Bihun",   pop:74,kal:480,pro:16,negeri:"Pulau Pinang",          pedas:"Rendah"},
+  {nama:"Mee Goreng",     kat:"Mee & Bihun",   pop:72,kal:460,pro:15,negeri:"Kebangsaan",            pedas:"Sederhana"},
+  {nama:"Nasi Kerabu",    kat:"Nasi & Bubur",  pop:68,kal:390,pro:18,negeri:"Kelantan / Terengganu", pedas:"Sederhana"},
+  {nama:"Asam Pedas",     kat:"Lauk Pauk",     pop:65,kal:280,pro:25,negeri:"Johor / Melaka",        pedas:"Tinggi"}
+];
+var kb={"Nasi & Bubur":"badge-nasi","Mee & Bihun":"badge-mee","Lauk Pauk":"badge-lauk","Roti & Capati":"badge-roti"};
+var pc={"Tinggi":"#c0392b","Sederhana":"#e67e22","Rendah":"#27ae60","Tiada":"#57606a"};
+
+var tb=document.getElementById("tb");
+D.forEach(function(d,i){
+  var tr=document.createElement("tr");
+  tr.innerHTML=
+    "<td>"+(i+1)+"</td>"+
+    "<td><strong>"+d.nama+"</strong></td>"+
+    "<td><span class='badge "+(kb[d.kat]||"badge-nasi")+"'>"+d.kat+"</span></td>"+
+    "<td><div style='display:flex;align-items:center;gap:8px'>"+
+      "<div class='bar-wrap' style='width:80px'><div class='bar-fill' style='width:"+d.pop+"%'></div></div>"+
+      "<span>"+d.pop+"%</span></div></td>"+
+    "<td>"+d.kal+"</td><td>"+d.pro+"</td><td>"+d.negeri+"</td>"+
+    "<td><strong style='color:"+pc[d.pedas]+"'>"+d.pedas+"</strong></td>";
+  tb.appendChild(tr);
+});
+
+function mc(id){return echarts.init(document.getElementById(id));}
+
+mc("c1").setOption({
+  tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+  grid:{left:20,right:20,bottom:80,top:20,containLabel:true},
+  xAxis:{type:"category",data:D.map(function(d){return d.nama;}),axisLabel:{rotate:25,fontSize:11}},
+  yAxis:{type:"value",max:100,name:"Indeks (%)"},
+  series:[{name:"Populariti",type:"bar",
+    data:D.map(function(d){return{value:d.pop,itemStyle:{borderRadius:[4,4,0,0],
+      color:d.pop>=90?"#c0392b":d.pop>=80?"#e74c3c":d.pop>=70?"#e67e22":"#f39c12"}};}),
+    label:{show:true,position:"top",fontSize:11,formatter:"{c}%"}
+  }]
+});
+
+mc("c2").setOption({
+  tooltip:{trigger:"item",formatter:"{b}: {c}% ({d}%)"},
+  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:11}},
+  series:[{type:"pie",roseType:"area",radius:["18%","62%"],center:["50%","46%"],
+    data:[
+      {name:"Nasi & Bubur", value:28,itemStyle:{color:"#c0392b"}},
+      {name:"Mee & Bihun",  value:22,itemStyle:{color:"#e67e22"}},
+      {name:"Lauk Pauk",    value:18,itemStyle:{color:"#f1c40f"}},
+      {name:"Kuih-muih",    value:15,itemStyle:{color:"#27ae60"}},
+      {name:"Roti & Capati",value:10,itemStyle:{color:"#2980b9"}},
+      {name:"Minuman",      value:7, itemStyle:{color:"#8e44ad"}}
+    ],label:{fontSize:11}
+  }]
+});
+
+mc("c3").setOption({
+  tooltip:{trigger:"axis"},
+  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:11}},
+  grid:{left:20,right:20,bottom:60,top:20,containLabel:true},
+  xAxis:{type:"category",data:D.map(function(d){return d.nama;}),axisLabel:{rotate:25,fontSize:10}},
+  yAxis:{type:"value"},
+  series:[
+    {name:"Kalori (kcal)",type:"line",smooth:true,data:D.map(function(d){return d.kal;}),
+      itemStyle:{color:"#e67e22"},areaStyle:{color:"rgba(230,126,34,0.12)"},symbol:"circle",symbolSize:6},
+    {name:"Protein (g)",  type:"line",smooth:true,data:D.map(function(d){return d.pro;}),
+      itemStyle:{color:"#27ae60"},symbol:"circle",symbolSize:6}
+  ]
+});
+
+mc("c4").setOption({
+  tooltip:{},
+  legend:{bottom:0,textStyle:{fontSize:11}},
+  radar:{indicator:[
+    {name:"Populariti",max:100},{name:"Rasa Pedas",max:100},
+    {name:"Mudah Ditemui",max:100},{name:"Nilai Nutrisi",max:100},
+    {name:"Harga Berpatutan",max:100},{name:"Masa Masak",max:100}
+  ],shape:"polygon",splitNumber:4,axisName:{fontSize:11},radius:"62%"},
+  series:[{type:"radar",data:[
+    {name:"Nasi Lemak",value:[95,60,98,65,90,85],itemStyle:{color:"#c0392b"},areaStyle:{opacity:0.15}},
+    {name:"Rendang",   value:[88,75,80,78,72,40],itemStyle:{color:"#2980b9"},areaStyle:{opacity:0.15}},
+    {name:"Laksa",     value:[85,80,85,60,80,70],itemStyle:{color:"#27ae60"},areaStyle:{opacity:0.15}}
+  ]}]
+});
+
+mc("c5").setOption({
+  tooltip:{trigger:"axis",axisPointer:{type:"shadow"}},
+  legend:{bottom:0,itemWidth:12,itemHeight:12,textStyle:{fontSize:10}},
+  grid:{left:20,right:20,bottom:60,top:20,containLabel:true},
+  xAxis:{type:"category",data:["Nasi Lemak","Rendang","Laksa","Satay","Nasi Kerabu"],axisLabel:{fontSize:11}},
+  yAxis:{type:"value",max:100,name:"Skor"},
+  series:[
+    {name:"Selangor/KL",         type:"bar",data:[90,75,70,80,55],itemStyle:{color:"#c0392b"},barMaxWidth:18},
+    {name:"Kelantan/Terengganu", type:"bar",data:[75,80,65,70,95],itemStyle:{color:"#e67e22"},barMaxWidth:18},
+    {name:"Negeri Sembilan",     type:"bar",data:[70,95,60,65,50],itemStyle:{color:"#27ae60"},barMaxWidth:18},
+    {name:"Pulau Pinang",        type:"bar",data:[65,55,95,75,45],itemStyle:{color:"#2980b9"},barMaxWidth:18}
+  ]
+});
+
+window.addEventListener("resize",function(){
+  ["c1","c2","c3","c4","c5"].forEach(function(id){
+    var e=document.getElementById(id);
+    if(e){var i=echarts.getInstanceByDom(e);if(i)i.resize();}
+  });
+});
+</script>
+</body>
+</html>
